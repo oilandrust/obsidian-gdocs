@@ -1,0 +1,19 @@
+{
+	"name": "obsidian-gdocs",
+	"version": "1.0.0",
+	"description": "Open Google Drive shortcut files in Obsidian's Web Viewer",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+	},
+	"keywords": [],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^22.15.17",
+		"esbuild": "0.25.5",
+		"obsidian": "latest",
+		"typescript": "^5.8.3"
+	}
+}

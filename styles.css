@@ -1,0 +1,27 @@
+.gdocs-error {
+	padding: 1.5rem;
+	max-width: 36rem;
+}
+
+.gdocs-error-title {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.gdocs-error-detail {
+	color: var(--text-muted);
+	margin-bottom: 1rem;
+	word-break: break-word;
+}
+
+.gdocs-error-url {
+	font-size: 0.85em;
+	word-break: break-all;
+	margin-bottom: 1rem;
+}
+
+.gdocs-mobile-actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
