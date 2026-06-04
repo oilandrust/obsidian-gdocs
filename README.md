@@ -2,6 +2,8 @@
 
 Obsidian plugin that opens Google Drive shortcut files in Obsidian's **Web Viewer**.
 
+Repository: https://github.com/oilandrust/obsidian-gdocs
+
 When Google Drive for Desktop (or similar sync) stores Docs, Sheets, and other Workspace files in your vault, they appear as small JSON files (`.gdoc`, `.gsheet`, etc.). GDocs registers those extensions, shows them in the file explorer with their extension, and opens the linked Google URL in a tab when you click them.
 
 ## Requirements
@@ -23,7 +25,18 @@ When Google Drive for Desktop (or similar sync) stores Docs, Sheets, and other W
 | `.gscript` | Apps Script |
 | `.gjam` | Jamboard |
 
-## Installation (development)
+## Installation
+
+### From Obsidian (Community plugins)
+
+After the plugin is approved in the directory:
+
+1. Open **Settings → Community plugins**.
+2. Turn off **Restricted mode** if needed, then **Browse**.
+3. Search for **GDocs** and install.
+4. Enable **GDocs** and the **Web viewer** core plugin, then reload Obsidian.
+
+### Manual / development
 
 1. Clone this repo into your vault's `.obsidian/plugins/gdocs` folder, or symlink it there.
 2. Install dependencies and build:
@@ -40,7 +53,7 @@ For development, run `npm run dev` to watch and rebuild.
 
 ## Usage
 
-Click any `.gdoc`, `.gsheet`, or other supported shortcut in the file explorer. The plugin reads the `url` field from the JSON file and opens it in Web Viewer.
+Click any `.gdoc`, `.gsheet`, or other supported shortcut in the file explorer. The plugin reads `doc_id`, `url`, or `resource_id` from the JSON shortcut and opens the document in Web Viewer.
 
 If Web Viewer is disabled, GDocs can open the link in your system browser instead (see plugin settings).
 

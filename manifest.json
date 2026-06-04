@@ -4,6 +4,7 @@
 	"version": "1.0.0",
 	"minAppVersion": "1.8.0",
 	"description": "Open Google Drive shortcut files (.gdoc, .gsheet, etc.) in Obsidian's Web Viewer.",
-	"author": "Olivier",
+	"author": "Olivier Rouiller",
+	"authorUrl": "https://github.com/oilandrust",
 	"isDesktopOnly": false
 }
