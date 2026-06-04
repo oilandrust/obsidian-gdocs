@@ -4,6 +4,8 @@ Obsidian plugin that opens Google Drive shortcut files in Obsidian's **Web Viewe
 
 Repository: https://github.com/oilandrust/obsidian-gdocs
 
+To submit or track community listing status, see [COMMUNITY_SUBMISSION.md](COMMUNITY_SUBMISSION.md).
+
 When Google Drive for Desktop (or similar sync) stores Docs, Sheets, and other Workspace files in your vault, they appear as small JSON files (`.gdoc`, `.gsheet`, etc.). GDocs registers those extensions, shows them in the file explorer with their extension, and opens the linked Google URL in a tab when you click them.
 
 ## Requirements
