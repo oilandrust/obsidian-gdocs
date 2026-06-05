@@ -1,4 +1,4 @@
-import { App, PluginSettingTab } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import type GDocsPlugin from "./main";
 import { DEFAULT_GDRIVE_EXTENSIONS } from "./constants";
 
@@ -22,11 +22,10 @@ export class GDocsSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "GDocs settings" });
+		new Setting(containerEl).setName("GDocs settings").setHeading();
 
-		containerEl.createEl("p", {
-			text: `Supported extensions: ${DEFAULT_GDRIVE_EXTENSIONS.map((e) => "." + e).join(", ")}`,
-			cls: "setting-item-description",
-		});
+		new Setting(containerEl)
+			.setName("Supported extensions")
+			.setDesc(DEFAULT_GDRIVE_EXTENSIONS.map((e) => "." + e).join(", "));
 	}
 }

@@ -26,10 +26,6 @@ export default class GDocsPlugin extends Plugin {
 		this.addSettingTab(new GDocsSettingTab(this.app, this));
 	}
 
-	onunload(): void {
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GDOCS);
-	}
-
 	async loadSettings(): Promise<void> {
 		const loaded = await this.loadData();
 		this.settings = { ...DEFAULT_SETTINGS, ...loaded };
