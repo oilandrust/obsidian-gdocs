@@ -82,7 +82,7 @@ export class GDocsView extends FileView {
 		webview.className = "gdocs-webview";
 		webview.addEventListener("new-window", (event: WebviewNewWindowEvent) => {
 			event.preventDefault();
-			const targetUrl = (event as WebviewNewWindowEvent).url;
+			const targetUrl = event.url;
 			if (targetUrl) {
 				webview.setAttribute("src", targetUrl);
 			}

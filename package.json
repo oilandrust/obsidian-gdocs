@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-gdocs",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "Open Google Drive shortcut files in the editor tab",
 	"main": "main.js",
 	"type": "module",

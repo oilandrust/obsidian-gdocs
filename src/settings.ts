@@ -38,7 +38,7 @@ export class GDocsSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 
-		new Setting(containerEl).setName("GDocs settings").setHeading();
+		new Setting(containerEl).setName("Google Drive shortcuts").setHeading();
 
 		new Setting(containerEl)
 			.setName("Supported extensions")

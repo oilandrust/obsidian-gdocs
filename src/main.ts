@@ -1,5 +1,5 @@
 import { Plugin } from "obsidian";
-import { DEFAULT_GDRIVE_EXTENSIONS, VIEW_TYPE_GDOCS } from "./constants";
+import { VIEW_TYPE_GDOCS } from "./constants";
 import { GDocsView } from "./gdocs-view";
 import {
 	DEFAULT_SETTINGS,
