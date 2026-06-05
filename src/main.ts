@@ -4,6 +4,7 @@ import { GDocsView } from "./gdocs-view";
 import {
 	DEFAULT_SETTINGS,
 	GDocsSettingTab,
+	parseGDocsSettings,
 	type GDocsSettings,
 } from "./settings";
 
@@ -27,11 +28,8 @@ export default class GDocsPlugin extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		const loaded = await this.loadData();
-		this.settings = { ...DEFAULT_SETTINGS, ...loaded };
-		if (!Array.isArray(this.settings.extensions)) {
-			this.settings.extensions = [...DEFAULT_GDRIVE_EXTENSIONS];
-		}
+		const loaded: unknown = await this.loadData();
+		this.settings = parseGDocsSettings(loaded);
 	}
 
 	async saveSettings(): Promise<void> {

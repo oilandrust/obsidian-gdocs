@@ -10,6 +10,22 @@ export const DEFAULT_SETTINGS: GDocsSettings = {
 	extensions: [...DEFAULT_GDRIVE_EXTENSIONS],
 };
 
+export function parseGDocsSettings(data: unknown): GDocsSettings {
+	if (data === null || typeof data !== "object") {
+		return { ...DEFAULT_SETTINGS };
+	}
+	const record = data as Record<string, unknown>;
+	if (!Array.isArray(record.extensions)) {
+		return { ...DEFAULT_SETTINGS };
+	}
+	const extensions = record.extensions.filter(
+		(ext): ext is string => typeof ext === "string" && ext.length > 0,
+	);
+	return {
+		extensions: extensions.length > 0 ? extensions : [...DEFAULT_GDRIVE_EXTENSIONS],
+	};
+}
+
 export class GDocsSettingTab extends PluginSettingTab {
 	plugin: GDocsPlugin;
 
