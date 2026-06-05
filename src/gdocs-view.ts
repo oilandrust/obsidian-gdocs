@@ -11,6 +11,7 @@ import { parseGdriveShortcut } from "./parse-gdrive-shortcut";
 
 export class GDocsView extends FileView {
 	plugin: GDocsPlugin;
+	private embeddedWebview: HTMLElement | null = null;
 
 	constructor(leaf: WorkspaceLeaf, plugin: GDocsPlugin) {
 		super(leaf);
@@ -29,8 +30,11 @@ export class GDocsView extends FileView {
 		return this.plugin.settings.extensions.includes(extension.toLowerCase());
 	}
 
+	async onOpen(): Promise<void> {
+		this.contentEl.addClass("gdocs-view-host");
+	}
+
 	async onLoadFile(file: TFile): Promise<void> {
-		this.clearError();
 		let raw: string;
 		try {
 			raw = await this.app.vault.read(file);
@@ -45,19 +49,50 @@ export class GDocsView extends FileView {
 			return;
 		}
 
-		await this.openUrl(parsed.url);
-		return;
+		if (Platform.isMobile) {
+			this.showMobileFallback(parsed.url);
+			return;
+		}
+
+		this.embedWebview(parsed.url);
 	}
 
 	async onUnloadFile(_file: TFile): Promise<void> {
+		this.clearWebview();
 		this.clearError();
+	}
+
+	private clearWebview(): void {
+		this.embeddedWebview?.remove();
+		this.embeddedWebview = null;
 	}
 
 	private clearError(): void {
 		this.contentEl.empty();
 	}
 
+	private embedWebview(url: string): void {
+		this.clearWebview();
+		this.clearError();
+
+		const container = this.contentEl.createDiv({ cls: "gdocs-webview-container" });
+		const webview = document.createElement("webview");
+		webview.setAttribute("src", url);
+		webview.setAttribute("webpreferences", "nativeWindowOpen=no");
+		webview.className = "gdocs-webview";
+		webview.addEventListener("new-window", (event) => {
+			event.preventDefault();
+			const targetUrl = (event as WebviewNewWindowEvent).url;
+			if (targetUrl) {
+				webview.setAttribute("src", targetUrl);
+			}
+		});
+		container.appendChild(webview);
+		this.embeddedWebview = webview;
+	}
+
 	private showError(message: string, url: string | null): void {
+		this.clearWebview();
 		this.clearError();
 		const wrap = this.contentEl.createDiv({ cls: "gdocs-error" });
 		wrap.createDiv({ cls: "gdocs-error-title", text: "Could not open Google shortcut" });
@@ -70,45 +105,13 @@ export class GDocsView extends FileView {
 		});
 	}
 
-	private async openUrl(url: string): Promise<void> {
-		if (Platform.isMobile) {
-			this.showMobileFallback(url);
-			return;
-		}
-
-		if (!this.isWebViewerEnabled()) {
-			if (this.plugin.settings.openInBrowserIfNoWebViewer) {
-				window.open(url, "_blank");
-				return;
-			}
-			this.showError(
-				"Web Viewer is disabled. Enable it under Settings → Core plugins → Web viewer, or turn on “Open in system browser when Web Viewer is off” in GDocs settings.",
-				url,
-			);
-			return;
-		}
-
-		try {
-			await this.leaf.setViewState({
-				type: "webviewer",
-				state: { url, navigate: true },
-				active: true,
-			});
-		} catch {
-			if (this.plugin.settings.openInBrowserIfNoWebViewer) {
-				window.open(url, "_blank");
-			} else {
-				this.showError("Failed to open Web Viewer.", url);
-			}
-		}
-	}
-
 	private showMobileFallback(url: string): void {
+		this.clearWebview();
 		this.clearError();
 		const wrap = this.contentEl.createDiv({ cls: "gdocs-error" });
 		wrap.createDiv({
 			cls: "gdocs-error-title",
-			text: "Web Viewer is not available on mobile",
+			text: "Embedded browser is not available on mobile",
 		});
 		wrap.createDiv({
 			cls: "gdocs-error-detail",
@@ -125,17 +128,9 @@ export class GDocsView extends FileView {
 			window.open(url, "_blank");
 		});
 	}
-
-	private isWebViewerEnabled(): boolean {
-		const internal = (
-			this.app as AppWithInternalPlugins
-		).internalPlugins?.getPluginById("web-viewer");
-		return internal?.enabled === true;
-	}
 }
 
-interface AppWithInternalPlugins {
-	internalPlugins?: {
-		getPluginById(id: string): { enabled: boolean } | undefined;
-	};
+interface WebviewNewWindowEvent extends Event {
+	url?: string;
+	preventDefault(): void;
 }

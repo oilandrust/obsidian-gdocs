@@ -1,9 +1,9 @@
 {
 	"id": "gdocs",
 	"name": "GDocs",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "1.8.0",
-	"description": "Open Google Drive shortcut files (.gdoc, .gsheet, etc.) in Web Viewer.",
+	"description": "Open Google Drive shortcut files (.gdoc, .gsheet, etc.) in the editor tab.",
 	"author": "Olivier Rouiller",
 	"authorUrl": "https://github.com/oilandrust",
 	"isDesktopOnly": false

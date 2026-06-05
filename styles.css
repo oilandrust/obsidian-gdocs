@@ -25,3 +25,25 @@
 	gap: 0.5rem;
 	flex-wrap: wrap;
 }
+
+.workspace-leaf-content[data-type="gdocs-view"] .view-content,
+.workspace-leaf-content[data-type="gdocs-view"] .view-body,
+.gdocs-view-host {
+	height: 100%;
+	padding: 0;
+}
+
+.gdocs-webview-container {
+	height: 100%;
+	width: 100%;
+	min-height: 0;
+	flex: 1;
+}
+
+.gdocs-webview {
+	width: 100%;
+	height: 100%;
+	border: none;
+	display: flex;
+	flex: 1;
+}
