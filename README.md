@@ -1,10 +1,11 @@
 # GDocs
 
-Plugin that opens Google Drive shortcut files in the editor tab. Particularly suited for those who store and sync their vault in Google Drive.
+Open and embed Google Drive shortcut files in Obsidian. Particularly suited for those who store and sync their vault in Google Drive.
 
-When Google Drive for Desktop (or similar sync) stores Docs, Sheets, and other Workspace files in your vault, they appear as small JSON files (`.gdoc`, `.gsheet`, etc.). GDocs registers those extensions, shows them in the file explorer with their extension, and displays the linked Google document in the same tab when you click them.
+When Google Drive for Desktop (or similar sync) stores Docs, Sheets, and other Workspace files in your vault, they appear as small JSON files (`.gdoc`, `.gsheet`, etc.). GDocs registers those extensions, shows them in the file explorer with their extension, and displays the linked Google document when you:
 
-Repository: https://github.com/oilandrust/obsidian-gdocs
+- **Click a shortcut** in the file explorer (embedded browser in the editor tab).
+- **Embed a shortcut in a note** with `![[My Sheet.gsheet]]` (inline in reading mode and Live Preview).
 
 ## Requirements
 
@@ -32,6 +33,17 @@ Click any `.gdoc`, `.gsheet`, or other supported shortcut in the file explorer. 
 - **Cmd/Ctrl+click or middle-click** — opens in a new tab (standard Obsidian behavior).
 
 The document is rendered in an embedded browser inside the file tab. This is separate from the core Web Viewer plugin (no shared toolbar or login session).
+
+### Embeds in notes
+
+Embed a shortcut in any markdown note with a wikilink:
+
+```markdown
+![[My Sheet.gsheet]]
+![[Projects/Report.gdoc]]
+```
+
+The embedded document appears inline in reading mode and Live Preview (desktop). Use the same `![[]]` syntax as images or PDFs.
 
 ### Mobile
 

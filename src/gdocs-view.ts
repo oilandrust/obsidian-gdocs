@@ -1,6 +1,5 @@
 import {
 	FileView,
-	Notice,
 	Platform,
 	WorkspaceLeaf,
 	type TFile,
@@ -8,6 +7,11 @@ import {
 import type GDocsPlugin from "./main";
 import { VIEW_TYPE_GDOCS } from "./constants";
 import { parseGdriveShortcut } from "./parse-gdrive-shortcut";
+import {
+	mountGdocsWebview,
+	showGdocsError,
+	showGdocsMobileFallback,
+} from "./gdocs-webview";
 
 export class GDocsView extends FileView {
 	plugin: GDocsPlugin;
@@ -74,33 +78,14 @@ export class GDocsView extends FileView {
 	private embedWebview(url: string): void {
 		this.clearWebview();
 		this.clearError();
-
-		const container = this.contentEl.createDiv({ cls: "gdocs-webview-container" });
-		const webview = activeDocument.createElement("webview");
-		webview.setAttribute("src", url);
-		webview.setAttribute("webpreferences", "nativeWindowOpen=no");
-		webview.className = "gdocs-webview";
-		webview.addEventListener("new-window", (event: WebviewNewWindowEvent) => {
-			event.preventDefault();
-			const targetUrl = event.url;
-			if (targetUrl) {
-				webview.setAttribute("src", targetUrl);
-			}
-		});
-		container.appendChild(webview);
-		this.embeddedWebview = webview;
+		this.embeddedWebview = mountGdocsWebview(this.contentEl, url);
 	}
 
 	private showError(message: string, url: string | null): void {
 		this.clearWebview();
 		this.clearError();
-		const wrap = this.contentEl.createDiv({ cls: "gdocs-error" });
-		wrap.createDiv({ cls: "gdocs-error-title", text: "Could not open Google shortcut" });
-		wrap.createDiv({ cls: "gdocs-error-detail", text: message });
-		if (url) {
-			wrap.createDiv({ cls: "gdocs-error-url", text: url });
-		}
-		wrap.createEl("p", {
+		showGdocsError(this.contentEl, message, url);
+		this.contentEl.createEl("p", {
 			text: "You can open the shortcut file as plain text from the file menu to inspect its contents.",
 		});
 	}
@@ -108,29 +93,6 @@ export class GDocsView extends FileView {
 	private showMobileFallback(url: string): void {
 		this.clearWebview();
 		this.clearError();
-		const wrap = this.contentEl.createDiv({ cls: "gdocs-error" });
-		wrap.createDiv({
-			cls: "gdocs-error-title",
-			text: "Embedded browser is not available on mobile",
-		});
-		wrap.createDiv({
-			cls: "gdocs-error-detail",
-			text: "Copy the link below and open it in your browser.",
-		});
-		wrap.createDiv({ cls: "gdocs-error-url", text: url });
-
-		const actions = wrap.createDiv({ cls: "gdocs-mobile-actions" });
-		actions.createEl("button", { text: "Copy link" }).addEventListener("click", () => {
-			void navigator.clipboard.writeText(url);
-			new Notice("Link copied to clipboard");
-		});
-		actions.createEl("button", { text: "Open in browser" }).addEventListener("click", () => {
-			window.open(url, "_blank");
-		});
+		showGdocsMobileFallback(this.contentEl, url);
 	}
-}
-
-interface WebviewNewWindowEvent extends Event {
-	url?: string;
-	preventDefault(): void;
 }

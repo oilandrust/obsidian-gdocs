@@ -1,5 +1,6 @@
 import { Plugin } from "obsidian";
 import { VIEW_TYPE_GDOCS } from "./constants";
+import { registerGdocsEmbeds } from "./gdocs-embed";
 import { GDocsView } from "./gdocs-view";
 import {
 	DEFAULT_SETTINGS,
@@ -23,6 +24,8 @@ export default class GDocsPlugin extends Plugin {
 		if (extensions.length > 0) {
 			this.registerExtensions(extensions, VIEW_TYPE_GDOCS);
 		}
+
+		registerGdocsEmbeds(this);
 
 		this.addSettingTab(new GDocsSettingTab(this.app, this));
 	}
