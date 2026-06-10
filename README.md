@@ -7,6 +7,9 @@ When Google Drive for Desktop (or similar sync) stores Docs, Sheets, and other W
 - **Click a shortcut** in the file explorer (embedded browser in the editor tab).
 - **Embed a shortcut in a note** with `![[My Sheet.gsheet]]` (inline in reading mode and Live Preview).
 
+## Say Hi!
+- If you are using it and are happy about it or find issues, please write to me. I would love to hear from you. o.rouiller@gmail.com
+
 ## Requirements
 
 - **Obsidian 1.8+** (desktop for embedded browser)
