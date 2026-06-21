@@ -8,6 +8,10 @@ import type GDocsPlugin from "./main";
 import { VIEW_TYPE_GDOCS } from "./constants";
 import { parseGdriveShortcut } from "./parse-gdrive-shortcut";
 import {
+	GDRIVE_READ_HELP,
+	readGdriveShortcutFile,
+} from "./read-gdrive-shortcut-file";
+import {
 	mountGdocsWebview,
 	showGdocsError,
 	showGdocsMobileFallback,
@@ -39,15 +43,13 @@ export class GDocsView extends FileView {
 	}
 
 	async onLoadFile(file: TFile): Promise<void> {
-		let raw: string;
-		try {
-			raw = await this.app.vault.read(file);
-		} catch {
-			this.showError("Could not read file.", null);
+		const readResult = await readGdriveShortcutFile(this.app, file);
+		if (!readResult.ok) {
+			this.showError(readResult.error, null, readResult.detail, GDRIVE_READ_HELP);
 			return;
 		}
 
-		const parsed = parseGdriveShortcut(raw, file.extension);
+		const parsed = parseGdriveShortcut(readResult.raw, file.extension);
 		if (!parsed.ok) {
 			this.showError(parsed.error, null);
 			return;
@@ -81,10 +83,15 @@ export class GDocsView extends FileView {
 		this.embeddedWebview = mountGdocsWebview(this.contentEl, url);
 	}
 
-	private showError(message: string, url: string | null): void {
+	private showError(
+		message: string,
+		url: string | null,
+		detail?: string,
+		help?: string,
+	): void {
 		this.clearWebview();
 		this.clearError();
-		showGdocsError(this.contentEl, message, url);
+		showGdocsError(this.contentEl, message, url, detail, help);
 		this.contentEl.createEl("p", {
 			text: "You can open the shortcut file as plain text from the file menu to inspect its contents.",
 		});

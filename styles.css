@@ -10,8 +10,22 @@
 
 .gdocs-error-detail {
 	color: var(--text-muted);
+	margin-bottom: 0.5rem;
+	word-break: break-word;
+}
+
+.gdocs-error-system {
+	font-family: var(--font-monospace);
+	font-size: 0.8em;
+	color: var(--text-faint);
 	margin-bottom: 1rem;
 	word-break: break-word;
+}
+
+.gdocs-error-help {
+	color: var(--text-muted);
+	font-size: 0.9em;
+	margin-bottom: 1rem;
 }
 
 .gdocs-error-url {

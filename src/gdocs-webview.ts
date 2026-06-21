@@ -26,12 +26,20 @@ export function showGdocsError(
 	parent: HTMLElement,
 	message: string,
 	url: string | null,
+	detail?: string,
+	help?: string,
 ): void {
 	const wrap = parent.createDiv({ cls: "gdocs-error" });
 	wrap.createDiv({ cls: "gdocs-error-title", text: "Could not open Google shortcut" });
 	wrap.createDiv({ cls: "gdocs-error-detail", text: message });
+	if (detail) {
+		wrap.createDiv({ cls: "gdocs-error-system", text: detail });
+	}
 	if (url) {
 		wrap.createDiv({ cls: "gdocs-error-url", text: url });
+	}
+	if (help) {
+		wrap.createEl("p", { cls: "gdocs-error-help", text: help });
 	}
 }
 

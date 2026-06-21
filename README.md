@@ -82,6 +82,15 @@ Older or third-party sync tools may use:
 - **Warning about moving shortcut files**  
   Do not move `.gdoc` / `.gsheet` files out of a syncing Google Drive folder; Google may delete the online document.
 
+- **“Could not read shortcut file from disk”**  
+  Google Drive shortcut files (`.gdoc`, `.gsheet`, etc.) are tiny JSON pointers, not the document itself. When your vault lives in Google Drive, the OS may block reading them if they are cloud-only or not fully synced.
+
+  Try:
+  1. In Finder (macOS) or File Explorer (Windows), right-click the shortcut → **Available offline** / download it, then reload Obsidian.
+  2. Open the `.gdoc` in a text editor (Notepad, TextEdit). If you see JSON with `doc_id` or `url`, the file is readable and GDocs should work after a reload.
+  3. On Windows, Google Drive sometimes exposes `.gdoc` files as placeholders that standard file reads cannot open; keeping the vault in **Mirror files** mode and ensuring shortcuts are offline usually helps.
+  4. Confirm the shortcut was not moved outside its original Google Drive folder.
+
 ## License
 
 MIT

@@ -2,6 +2,10 @@ import { App, Component, Platform, type TFile } from "obsidian";
 import type GDocsPlugin from "./main";
 import { parseGdriveShortcut } from "./parse-gdrive-shortcut";
 import {
+	GDRIVE_READ_HELP,
+	readGdriveShortcutFile,
+} from "./read-gdrive-shortcut-file";
+import {
 	mountGdocsWebview,
 	showGdocsError,
 	showGdocsMobileFallback,
@@ -52,16 +56,21 @@ export class GDocsEmbed extends Component {
 			text: `Loading ${this.file.name}…`,
 		});
 
-		let raw: string;
-		try {
-			raw = await this.app.vault.read(this.file);
-		} catch {
-			containerEl.empty();
-			showGdocsError(containerEl, "Could not read file.", null);
+		const readResult = await readGdriveShortcutFile(this.app, this.file);
+		containerEl.empty();
+
+		if (!readResult.ok) {
+			showGdocsError(
+				containerEl,
+				readResult.error,
+				null,
+				readResult.detail,
+				GDRIVE_READ_HELP,
+			);
 			return;
 		}
 
-		const parsed = parseGdriveShortcut(raw, this.file.extension);
+		const parsed = parseGdriveShortcut(readResult.raw, this.file.extension);
 		containerEl.empty();
 
 		if (!parsed.ok) {

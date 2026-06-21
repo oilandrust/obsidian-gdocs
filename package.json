@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-gdocs",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "Open and embed Google Drive shortcut files in Obsidian",
 	"main": "main.js",
 	"type": "module",
