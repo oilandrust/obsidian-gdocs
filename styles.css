@@ -83,3 +83,138 @@
 .gdocs-embed .gdocs-error {
 	padding: 1rem;
 }
+
+/* Webview Action Toolbar */
+.gdocs-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.35rem 0.75rem;
+	background-color: var(--background-secondary);
+	border-bottom: 1px solid var(--divider-color);
+	gap: 0.5rem;
+	font-size: var(--font-ui-smaller);
+}
+
+.gdocs-toolbar-title {
+	font-weight: 500;
+	color: var(--text-normal);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.gdocs-toolbar-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	flex-shrink: 0;
+}
+
+.gdocs-toolbar-btn {
+	padding: 0.2rem 0.5rem;
+	font-size: var(--font-ui-smaller);
+	cursor: pointer;
+}
+
+/* Inline Warning / 401 Notice Banner */
+.gdocs-warning-banner {
+	background-color: var(--background-secondary-alt);
+	border-bottom: 1px solid var(--text-warning);
+	color: var(--text-normal);
+	padding: 0.5rem 0.75rem;
+	font-size: var(--font-ui-smaller);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.gdocs-warning-banner button {
+	padding: 0.2rem 0.6rem;
+	font-size: var(--font-ui-smaller);
+	white-space: nowrap;
+}
+
+/* Document Card View */
+.gdocs-card {
+	padding: 2.5rem 2rem;
+	max-width: 44rem;
+	margin: 2rem auto;
+	background-color: var(--background-secondary);
+	border: 1px solid var(--divider-color);
+	border-radius: var(--radius-l, 8px);
+	box-shadow: var(--shadow-s, 0 1px 3px rgba(0, 0, 0, 0.1));
+}
+
+.gdocs-card-header {
+	margin-bottom: 1.25rem;
+}
+
+.gdocs-badge {
+	display: inline-block;
+	font-size: var(--font-ui-smaller);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 0.15rem 0.5rem;
+	border-radius: var(--radius-s, 4px);
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+	margin-bottom: 0.75rem;
+}
+
+.gdocs-card-title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--text-normal);
+	word-break: break-word;
+}
+
+.gdocs-card-info {
+	margin-bottom: 1.5rem;
+}
+
+.gdocs-card-desc {
+	color: var(--text-muted);
+	font-size: var(--font-ui-medium);
+	line-height: 1.5;
+	margin-bottom: 0.75rem;
+}
+
+.gdocs-card-url {
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+	word-break: break-all;
+	padding: 0.4rem 0.6rem;
+	background-color: var(--background-primary);
+	border-radius: var(--radius-s, 4px);
+	border: 1px solid var(--divider-color);
+}
+
+.gdocs-card-actions {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.gdocs-card-actions button {
+	padding: 0.4rem 1rem;
+	font-size: var(--font-ui-medium);
+	cursor: pointer;
+}
+
+/* Compact style when rendered as embed */
+.gdocs-embed .gdocs-card {
+	margin: 0.5rem 0;
+	padding: 1.25rem;
+	max-width: 100%;
+}
+
+.gdocs-embed .gdocs-card-title {
+	font-size: 1.1rem;
+}
+

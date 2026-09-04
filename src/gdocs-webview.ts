@@ -1,16 +1,77 @@
 import { Notice } from "obsidian";
+import type { GDocsSettings } from "./settings";
+import { getGoogleAppName } from "./constants";
 
 interface WebviewNewWindowEvent extends Event {
 	url?: string;
 	preventDefault(): void;
 }
 
-export function mountGdocsWebview(parent: HTMLElement, url: string): HTMLElement {
+interface WebviewFailLoadEvent extends Event {
+	errorCode?: number;
+	errorDescription?: string;
+	validatedURL?: string;
+	isMainFrame?: boolean;
+}
+
+export function mountGdocsWebview(
+	parent: HTMLElement,
+	url: string,
+	settings?: GDocsSettings,
+	title?: string,
+): HTMLElement {
 	const container = parent.createDiv({ cls: "gdocs-webview-container" });
+
+	if (settings?.enableWebviewToolbar !== false) {
+		const toolbar = container.createDiv({ cls: "gdocs-toolbar" });
+		const titleEl = toolbar.createDiv({ cls: "gdocs-toolbar-title" });
+		titleEl.setText(title || "Google Document");
+
+		const actions = toolbar.createDiv({ cls: "gdocs-toolbar-actions" });
+
+		const openBtn = actions.createEl("button", {
+			cls: "gdocs-toolbar-btn mod-cta",
+			text: "Open in browser",
+		});
+		openBtn.addEventListener("click", () => {
+			window.open(url, "_blank");
+		});
+
+		const reloadBtn = actions.createEl("button", {
+			cls: "gdocs-toolbar-btn",
+			text: "Reload",
+		});
+		reloadBtn.addEventListener("click", () => {
+			try {
+				(webview as unknown as { reload: () => void }).reload();
+			} catch {
+				webview.setAttribute("src", url);
+			}
+		});
+
+		const copyBtn = actions.createEl("button", {
+			cls: "gdocs-toolbar-btn",
+			text: "Copy link",
+		});
+		copyBtn.addEventListener("click", () => {
+			void navigator.clipboard.writeText(url);
+			new Notice("Link copied to clipboard");
+		});
+	}
+
 	const webview = activeDocument.createElement("webview");
 	webview.setAttribute("src", url);
 	webview.setAttribute("webpreferences", "nativeWindowOpen=no");
 	webview.className = "gdocs-webview";
+
+	if (settings?.persistSession !== false) {
+		webview.setAttribute("partition", "persist:gdocs");
+	}
+
+	if (settings?.customUserAgent) {
+		webview.setAttribute("useragent", settings.customUserAgent);
+	}
+
 	webview.addEventListener("new-window", (event: WebviewNewWindowEvent) => {
 		event.preventDefault();
 		const targetUrl = event.url;
@@ -18,8 +79,71 @@ export function mountGdocsWebview(parent: HTMLElement, url: string): HTMLElement
 			webview.setAttribute("src", targetUrl);
 		}
 	});
+
+	webview.addEventListener("did-fail-load", (event: WebviewFailLoadEvent) => {
+		if (event.isMainFrame) {
+			const banner = container.createDiv({ cls: "gdocs-warning-banner" });
+			banner.createSpan({
+				text: "Failed to load document in embedded view. Google may restrict account sign-in inside desktop apps (HTTP 401). ",
+			});
+			const btn = banner.createEl("button", { text: "Open in external browser" });
+			btn.addEventListener("click", () => {
+				window.open(url, "_blank");
+			});
+		}
+	});
+
 	container.appendChild(webview);
 	return webview;
+}
+
+export function showGdocsDocumentCard(
+	parent: HTMLElement,
+	url: string,
+	fileName: string,
+	fileExtension?: string,
+	onTryEmbed?: () => void,
+): void {
+	const card = parent.createDiv({ cls: "gdocs-card" });
+	const appName = getGoogleAppName(fileExtension);
+
+	const header = card.createDiv({ cls: "gdocs-card-header" });
+	header.createDiv({ cls: "gdocs-badge", text: appName });
+	header.createEl("h2", { cls: "gdocs-card-title", text: fileName });
+
+	const info = card.createDiv({ cls: "gdocs-card-info" });
+	info.createEl("p", {
+		cls: "gdocs-card-desc",
+		text: "Document opened in your default web browser. Google Workspace requires browser authentication to access and edit private documents.",
+	});
+	info.createDiv({ cls: "gdocs-card-url", text: url });
+
+	const actions = card.createDiv({ cls: "gdocs-card-actions" });
+
+	const openBtn = actions.createEl("button", {
+		cls: "mod-cta",
+		text: "Open in browser",
+	});
+	openBtn.addEventListener("click", () => {
+		window.open(url, "_blank");
+	});
+
+	const copyBtn = actions.createEl("button", {
+		text: "Copy link",
+	});
+	copyBtn.addEventListener("click", () => {
+		void navigator.clipboard.writeText(url);
+		new Notice("Link copied to clipboard");
+	});
+
+	if (onTryEmbed) {
+		const embedBtn = actions.createEl("button", {
+			text: "Try embedded view",
+		});
+		embedBtn.addEventListener("click", () => {
+			onTryEmbed();
+		});
+	}
 }
 
 export function showGdocsError(
