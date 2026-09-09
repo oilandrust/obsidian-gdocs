@@ -1,4 +1,4 @@
-import { App, Component, Platform, type TFile } from "obsidian";
+import { Component, Platform, type App, type TFile } from "obsidian";
 import type GDocsPlugin from "./main";
 import { parseGdriveShortcut } from "./parse-gdrive-shortcut";
 import {
@@ -33,7 +33,7 @@ export class GDocsEmbed extends Component {
 
 	constructor(
 		private info: EmbedInfo,
-		private app: App,
+		private plugin: GDocsPlugin,
 		private file: TFile,
 	) {
 		super();
@@ -56,7 +56,7 @@ export class GDocsEmbed extends Component {
 			text: `Loading ${this.file.name}…`,
 		});
 
-		const readResult = await readGdriveShortcutFile(this.app, this.file);
+		const readResult = await readGdriveShortcutFile(this.plugin.app, this.file);
 		containerEl.empty();
 
 		if (!readResult.ok) {
@@ -83,7 +83,12 @@ export class GDocsEmbed extends Component {
 			return;
 		}
 
-		this.webview = mountGdocsWebview(containerEl, parsed.url);
+		this.webview = mountGdocsWebview(
+			containerEl,
+			parsed.url,
+			this.plugin.settings,
+			this.file.basename,
+		);
 	}
 
 	onunload(): void {
@@ -105,7 +110,7 @@ export function registerGdocsEmbeds(plugin: GDocsPlugin): void {
 	}
 
 	const createEmbed: GDocsEmbedCreator = (info, file) =>
-		new GDocsEmbed(info, plugin.app, file);
+		new GDocsEmbed(info, plugin, file);
 
 	if (typeof registry.registerExtensions === "function") {
 		registry.registerExtensions(extensions, createEmbed);

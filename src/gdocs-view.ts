@@ -60,7 +60,13 @@ export class GDocsView extends FileView {
 			return;
 		}
 
-		this.embedWebview(parsed.url);
+		if (this.plugin.settings.openBehavior === "browser") {
+			window.open(parsed.url, "_blank");
+			this.leaf.detach();
+			return;
+		}
+
+		this.embedWebview(parsed.url, file.basename);
 	}
 
 	async onUnloadFile(_file: TFile): Promise<void> {
@@ -77,10 +83,15 @@ export class GDocsView extends FileView {
 		this.contentEl.empty();
 	}
 
-	private embedWebview(url: string): void {
+	private embedWebview(url: string, title?: string): void {
 		this.clearWebview();
 		this.clearError();
-		this.embeddedWebview = mountGdocsWebview(this.contentEl, url);
+		this.embeddedWebview = mountGdocsWebview(
+			this.contentEl,
+			url,
+			this.plugin.settings,
+			title,
+		);
 	}
 
 	private showError(

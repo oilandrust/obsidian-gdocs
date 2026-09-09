@@ -74,7 +74,22 @@ Older or third-party sync tools may use:
 }
 ```
 
+## Settings
+
+Open **Settings → Community plugins → GDocs**:
+
+- **Open behavior**:
+  - **Embedded Webview (Default)**: Renders the document inline within Obsidian using an embedded Electron webview.
+  - **System default browser**: Launches the Google document directly in your default browser (Chrome, Edge, Firefox, etc.) where your Google account is already logged in with full Google Workspace capabilities.
+- **Show toolbar above embedded view**: Displays an action bar above the embedded webview with quick buttons to open in your default browser, reload the page, and copy the link.
+- **Persist webview session partition**: Preserves cookies and cache across app restarts (using `partition="persist:gdocs"`).
+
 ## Troubleshooting
+
+- **401 Unauthorized or “The request is malformed”**  
+  Google restricts account authentication inside embedded desktop webviews under RFC 8252 to prevent credential harvesting. In addition, Obsidian's internal header handling can trigger Google's malformed request error on private files or accounts requiring fresh sign-in.
+  
+  **Fix**: In GDocs settings, set **Open behavior** to **“System default browser”**. When you click any `.gdoc` or `.gsheet`, it will launch directly in your default browser where you are already signed in.
 
 - **Files not visible in the explorer**  
   Check Settings → Files & links → **Detect all file extensions**, and ensure `.gdoc` / `.gsheet` are not listed under **Excluded files**.

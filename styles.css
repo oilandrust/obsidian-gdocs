@@ -83,3 +83,56 @@
 .gdocs-embed .gdocs-error {
 	padding: 1rem;
 }
+
+/* Webview Action Toolbar */
+.gdocs-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.35rem 0.75rem;
+	background-color: var(--background-secondary);
+	border-bottom: 1px solid var(--divider-color);
+	gap: 0.5rem;
+	font-size: var(--font-ui-smaller);
+}
+
+.gdocs-toolbar-title {
+	font-weight: 500;
+	color: var(--text-normal);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.gdocs-toolbar-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	flex-shrink: 0;
+}
+
+.gdocs-toolbar-btn {
+	padding: 0.2rem 0.5rem;
+	font-size: var(--font-ui-smaller);
+	cursor: pointer;
+}
+
+/* Inline Warning / 401 Notice Banner */
+.gdocs-warning-banner {
+	background-color: var(--background-secondary-alt);
+	border-bottom: 1px solid var(--text-warning);
+	color: var(--text-normal);
+	padding: 0.5rem 0.75rem;
+	font-size: var(--font-ui-smaller);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.gdocs-warning-banner button {
+	padding: 0.2rem 0.6rem;
+	font-size: var(--font-ui-smaller);
+	white-space: nowrap;
+}
+
