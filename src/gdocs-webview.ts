@@ -1,6 +1,5 @@
 import { Notice } from "obsidian";
 import type { GDocsSettings } from "./settings";
-import { getGoogleAppName } from "./constants";
 
 interface WebviewNewWindowEvent extends Event {
 	url?: string;
@@ -68,10 +67,6 @@ export function mountGdocsWebview(
 		webview.setAttribute("partition", "persist:gdocs");
 	}
 
-	if (settings?.customUserAgent) {
-		webview.setAttribute("useragent", settings.customUserAgent);
-	}
-
 	webview.addEventListener("new-window", (event: WebviewNewWindowEvent) => {
 		event.preventDefault();
 		const targetUrl = event.url;
@@ -95,55 +90,6 @@ export function mountGdocsWebview(
 
 	container.appendChild(webview);
 	return webview;
-}
-
-export function showGdocsDocumentCard(
-	parent: HTMLElement,
-	url: string,
-	fileName: string,
-	fileExtension?: string,
-	onTryEmbed?: () => void,
-): void {
-	const card = parent.createDiv({ cls: "gdocs-card" });
-	const appName = getGoogleAppName(fileExtension);
-
-	const header = card.createDiv({ cls: "gdocs-card-header" });
-	header.createDiv({ cls: "gdocs-badge", text: appName });
-	header.createEl("h2", { cls: "gdocs-card-title", text: fileName });
-
-	const info = card.createDiv({ cls: "gdocs-card-info" });
-	info.createEl("p", {
-		cls: "gdocs-card-desc",
-		text: "Document opened in your default web browser. Google Workspace requires browser authentication to access and edit private documents.",
-	});
-	info.createDiv({ cls: "gdocs-card-url", text: url });
-
-	const actions = card.createDiv({ cls: "gdocs-card-actions" });
-
-	const openBtn = actions.createEl("button", {
-		cls: "mod-cta",
-		text: "Open in browser",
-	});
-	openBtn.addEventListener("click", () => {
-		window.open(url, "_blank");
-	});
-
-	const copyBtn = actions.createEl("button", {
-		text: "Copy link",
-	});
-	copyBtn.addEventListener("click", () => {
-		void navigator.clipboard.writeText(url);
-		new Notice("Link copied to clipboard");
-	});
-
-	if (onTryEmbed) {
-		const embedBtn = actions.createEl("button", {
-			text: "Try embedded view",
-		});
-		embedBtn.addEventListener("click", () => {
-			onTryEmbed();
-		});
-	}
 }
 
 export function showGdocsError(

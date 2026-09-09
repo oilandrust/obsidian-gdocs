@@ -7,7 +7,6 @@ import {
 } from "./read-gdrive-shortcut-file";
 import {
 	mountGdocsWebview,
-	showGdocsDocumentCard,
 	showGdocsError,
 	showGdocsMobileFallback,
 } from "./gdocs-webview";
@@ -81,26 +80,6 @@ export class GDocsEmbed extends Component {
 
 		if (Platform.isMobile) {
 			showGdocsMobileFallback(containerEl, parsed.url);
-			return;
-		}
-
-		if (this.plugin.settings.openBehavior === "browser") {
-			showGdocsDocumentCard(
-				containerEl,
-				parsed.url,
-				this.file.basename,
-				this.file.extension,
-				() => {
-					this.webview?.remove();
-					containerEl.empty();
-					this.webview = mountGdocsWebview(
-						containerEl,
-						parsed.url,
-						this.plugin.settings,
-						this.file.basename,
-					);
-				},
-			);
 			return;
 		}
 

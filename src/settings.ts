@@ -2,21 +2,19 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 import type GDocsPlugin from "./main";
 import { DEFAULT_GDRIVE_EXTENSIONS } from "./constants";
 
-export type OpenBehavior = "browser" | "embedded";
+export type OpenBehavior = "embedded" | "browser";
 
 export interface GDocsSettings {
 	openBehavior: OpenBehavior;
 	enableWebviewToolbar: boolean;
 	persistSession: boolean;
-	customUserAgent: string;
 	extensions: string[];
 }
 
 export const DEFAULT_SETTINGS: GDocsSettings = {
-	openBehavior: "browser",
+	openBehavior: "embedded",
 	enableWebviewToolbar: true,
 	persistSession: true,
-	customUserAgent: "",
 	extensions: [...DEFAULT_GDRIVE_EXTENSIONS],
 };
 
@@ -26,7 +24,7 @@ export function parseGDocsSettings(data: unknown): GDocsSettings {
 	}
 	const record = data as Record<string, unknown>;
 	const openBehavior: OpenBehavior =
-		record.openBehavior === "embedded" ? "embedded" : "browser";
+		record.openBehavior === "browser" ? "browser" : "embedded";
 	const enableWebviewToolbar =
 		typeof record.enableWebviewToolbar === "boolean"
 			? record.enableWebviewToolbar
@@ -35,10 +33,6 @@ export function parseGDocsSettings(data: unknown): GDocsSettings {
 		typeof record.persistSession === "boolean"
 			? record.persistSession
 			: DEFAULT_SETTINGS.persistSession;
-	const customUserAgent =
-		typeof record.customUserAgent === "string"
-			? record.customUserAgent
-			: DEFAULT_SETTINGS.customUserAgent;
 
 	const rawExtensions = Array.isArray(record.extensions) ? record.extensions : [];
 	const extensions = rawExtensions.filter(
@@ -49,7 +43,6 @@ export function parseGDocsSettings(data: unknown): GDocsSettings {
 		openBehavior,
 		enableWebviewToolbar,
 		persistSession,
-		customUserAgent,
 		extensions: extensions.length > 0 ? extensions : [...DEFAULT_GDRIVE_EXTENSIONS],
 	};
 }
@@ -71,12 +64,12 @@ export class GDocsSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Open behavior")
 			.setDesc(
-				"Choose how Google Drive shortcut files (.gdoc, .gsheet, etc.) open. Google restricts account login inside embedded desktop webviews (resulting in 401 Unauthorized). Opening in your default browser provides seamless authentication and full Google Workspace capabilities.",
+				"Choose how Google Drive shortcut files (.gdoc, .gsheet, etc.) open when clicked. By default, documents open inside Obsidian. If you experience Google 401 Unauthorized errors on private files or prefer full Google Workspace features, select System default browser.",
 			)
 			.addDropdown((dropdown) =>
 				dropdown
-					.addOption("browser", "System default browser (Recommended)")
-					.addOption("embedded", "Embedded Webview")
+					.addOption("embedded", "Embedded Webview (Default)")
+					.addOption("browser", "System default browser")
 					.setValue(this.plugin.settings.openBehavior)
 					.onChange(async (value) => {
 						this.plugin.settings.openBehavior = value as OpenBehavior;
@@ -108,21 +101,6 @@ export class GDocsSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.persistSession)
 					.onChange(async (value) => {
 						this.plugin.settings.persistSession = value;
-						await this.plugin.saveSettings();
-					}),
-			);
-
-		new Setting(containerEl)
-			.setName("Custom User-Agent")
-			.setDesc(
-				"Optional: Override the User-Agent header for the embedded webview. Leave blank to use Obsidian's default.",
-			)
-			.addText((text) =>
-				text
-					.setPlaceholder("Mozilla/5.0 ...")
-					.setValue(this.plugin.settings.customUserAgent)
-					.onChange(async (value) => {
-						this.plugin.settings.customUserAgent = value.trim();
 						await this.plugin.saveSettings();
 					}),
 			);

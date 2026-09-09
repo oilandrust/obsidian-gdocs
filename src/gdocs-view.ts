@@ -13,7 +13,6 @@ import {
 } from "./read-gdrive-shortcut-file";
 import {
 	mountGdocsWebview,
-	showGdocsDocumentCard,
 	showGdocsError,
 	showGdocsMobileFallback,
 } from "./gdocs-webview";
@@ -63,7 +62,7 @@ export class GDocsView extends FileView {
 
 		if (this.plugin.settings.openBehavior === "browser") {
 			window.open(parsed.url, "_blank");
-			this.showDocumentCard(parsed.url, file);
+			this.leaf.detach();
 			return;
 		}
 
@@ -82,18 +81,6 @@ export class GDocsView extends FileView {
 
 	private clearError(): void {
 		this.contentEl.empty();
-	}
-
-	private showDocumentCard(url: string, file: TFile): void {
-		this.clearWebview();
-		this.clearError();
-		showGdocsDocumentCard(
-			this.contentEl,
-			url,
-			file.basename,
-			file.extension,
-			() => this.embedWebview(url, file.basename),
-		);
 	}
 
 	private embedWebview(url: string, title?: string): void {

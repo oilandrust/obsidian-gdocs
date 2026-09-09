@@ -79,18 +79,17 @@ Older or third-party sync tools may use:
 Open **Settings → Community plugins → GDocs**:
 
 - **Open behavior**:
-  - **System default browser (Recommended)**: Automatically launches the Google document in your default browser (Chrome, Edge, Firefox, etc.) where your Google account is already logged in, while displaying a clean native document card inside Obsidian.
-  - **Embedded Webview**: Renders the document inline within Obsidian using an embedded Electron webview (ideal for public or link-shared documents).
+  - **Embedded Webview (Default)**: Renders the document inline within Obsidian using an embedded Electron webview.
+  - **System default browser**: Launches the Google document directly in your default browser (Chrome, Edge, Firefox, etc.) where your Google account is already logged in with full Google Workspace capabilities.
 - **Show toolbar above embedded view**: Displays an action bar above the embedded webview with quick buttons to open in your default browser, reload the page, and copy the link.
 - **Persist webview session partition**: Preserves cookies and cache across app restarts (using `partition="persist:gdocs"`).
-- **Custom User-Agent**: Optional override for the webview User-Agent string.
 
 ## Troubleshooting
 
 - **401 Unauthorized or “The request is malformed”**  
-  Google strictly restricts account authentication inside embedded desktop webviews under RFC 8252 to prevent credential harvesting. In addition, Obsidian's internal header handling can trigger Google's malformed request error on private files.
+  Google restricts account authentication inside embedded desktop webviews under RFC 8252 to prevent credential harvesting. In addition, Obsidian's internal header handling can trigger Google's malformed request error on private files or accounts requiring fresh sign-in.
   
-  **Fix**: In GDocs settings, set **Open behavior** to **“System default browser”**. When you click any `.gdoc` or `.gsheet`, it will open directly in your logged-in browser with full Google Workspace capabilities, while keeping a native document card in Obsidian.
+  **Fix**: In GDocs settings, set **Open behavior** to **“System default browser”**. When you click any `.gdoc` or `.gsheet`, it will launch directly in your default browser where you are already signed in.
 
 - **Files not visible in the explorer**  
   Check Settings → Files & links → **Detect all file extensions**, and ensure `.gdoc` / `.gsheet` are not listed under **Excluded files**.
